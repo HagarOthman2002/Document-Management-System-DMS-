@@ -1,0 +1,1 @@
+export const expiryTime = "2h"
