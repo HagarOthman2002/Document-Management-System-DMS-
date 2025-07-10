@@ -1,5 +1,5 @@
 import LoginImg from "../assets/LoginSignUp.png";
-import Logo from "../assets/Logo.png";
+import Logo from "../assets/drive img.webp";
 import Input from "../components/input/Input";
 import Button from "../components/button/Button";
 import PasswordInput from "../components/input/PasswordInput";
@@ -43,7 +43,7 @@ const Login = () => {
       })
       if(response.data?.token){
         localStorage.setItem("token" , response.data.token)
-        navigate("/dashboard")
+        navigate("/home")
       }else{
         setError("Invalid response from server")
       }
@@ -57,7 +57,7 @@ const Login = () => {
 
   return (
     <div className="flex flex-col lg:flex-row w-screen h-screen overflow-hidden">
-      {/* Left Image Section */}
+ 
       <div className="w-full lg:w-1/2 h-64 lg:h-full">
         <img
           src={LoginImg}
@@ -66,14 +66,13 @@ const Login = () => {
         />
       </div>
 
-      {/* Right Form Section */}
+  
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 md:px-12 lg:px-24 py-10">
-        {/* Logo */}
+  
         <div className="mb-8">
           <img src={Logo} alt="Logo" className="h-16 mx-auto" />
         </div>
 
-        {/* Heading */}
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-3 text-[#313237]">
           Log in
         </h2>
@@ -81,7 +80,7 @@ const Login = () => {
           Welcome back! Please enter your details.
         </p>
 
-        {/* Form */}
+  
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label
@@ -118,7 +117,7 @@ const Login = () => {
           <Button>Log In</Button>
         </form>
 
-        {/* Footer */}
+     
         <p className="text-xs text-gray-400 mt-20 text-center">
           POWERED BY <span className="font-semibold text-black">nocodb</span>
         </p>

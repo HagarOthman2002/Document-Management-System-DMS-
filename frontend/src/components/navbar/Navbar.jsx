@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import ProfileInfo from "../Cards/profileInfo";
 import SearchBar from "../SearchBar/SearchBar";
+import { CiSettings } from "react-icons/ci";
 
 const Navbar = ({
   userInfo,
@@ -18,15 +19,17 @@ const Navbar = ({
   };
 
   return (
-    <div className="bg-white flex items-center justify-between px-6 py-2 sm:gap-2 drop-shadow">
-      <h2 className="text-xl font-medium text-black py-2">Products</h2>
+    <div className=" bg-slate-100 flex items-center justify-between px-6 py-2 sm:gap-2 drop-shadow">
       <SearchBar
         value={searchQuery}
         onChange={({ target }) => setSearchQuery(target.value)}
         handleSearch={handleSearch}
         onClearSearch={onClearSearch}
       />
-      <ProfileInfo userInfo={userInfo} onLogOut={onLogout} />
+      <div className="flex items-center gap-2">
+        <CiSettings className="text-3xl text-slate-500 curosr-Pointer hover:text-black" />
+        <ProfileInfo userInfo={userInfo} onLogOut={onLogout} />
+      </div>
     </div>
   );
 };
