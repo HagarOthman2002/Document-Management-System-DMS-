@@ -14,7 +14,7 @@ export interface SignUpInput {
   nid: string;
 }
 
-export const signUpService = async ({
+export const signUp = async ({
   name,
   email,
   password,
@@ -64,7 +64,7 @@ export const signUpService = async ({
   return { message: "User registered successfully" };
 };
 
-export const loginService = async (email: string, password: string) => {
+export const login = async (email: string, password: string) => {
   if (!email || !password) {
     throw new Error("Email and password are required");
   }
@@ -88,7 +88,7 @@ export const loginService = async (email: string, password: string) => {
   return { token };
 };
 
-export const getUserService = async (userId: number) => {
+export const getUser = async (userId: number) => {
   if (!userId) {
     throw new Error("Unauthorized");
   }

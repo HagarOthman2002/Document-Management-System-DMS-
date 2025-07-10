@@ -19,12 +19,12 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: "home", element: <Home /> },
-      { path: "myDrive", element: <MyDrive /> },
+      { path: "drive", element: <MyDrive /> },
       { path: "Recent", element: <Recent /> },
       { path: "shared", element: <Shared /> },
       { path: "spam", element: <Spam /> },
       { path: "trash", element: <Trash /> },
-      { path: "computer", element: <Computers /> },
+      { path: "computers", element: <Computers /> },
     ],
   },
 ]);

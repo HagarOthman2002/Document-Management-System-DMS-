@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
-import Workspace from "../models/workSpcae.model";
 import { PrismaClient } from "../generated/prisma/client";
-import { validateNationalId } from "../utilities";
-import { createWorkspaceService ,getWorkspacesByNIDService,updateWorkspaceService ,deleteWorkspaceService } from "../services/workspace.service";
+import * as workspaceServices from "../services/workspace.service";
 const prisma = new PrismaClient();
 
 export const createWorkspace = async (req: Request, res: Response): Promise<void> => {
   try {
-    const workspace = await createWorkspaceService(req.body);
+    const workspace = await workspaceServices.createWorkspace(req.body);
     res.status(201).json({ status: "success", workspace });
   } catch (err: any) {
     const message = err.message || "Internal server error";
@@ -19,7 +17,7 @@ export const createWorkspace = async (req: Request, res: Response): Promise<void
 
 export const getWorkspacesByNID = async (req: Request, res: Response): Promise<void> => {
   try {
-    const workspaces = await getWorkspacesByNIDService(req.params.nid);
+    const workspaces = await workspaceServices.getWorkspacesByNID(req.params.nid);
     res.json({ status: "success", workspaces });
   } catch (err: any) {
     const message = err.message || "Internal server error";
@@ -33,7 +31,7 @@ export const updateWorkspace = async (
   res: Response
 ): Promise<void> => {
   try {
-    const updated = await updateWorkspaceService(req.params.id, req.body)
+    const updated = await workspaceServices.updateWorkspace(req.params.id, req.body)
     res.json({ status: "success", workspace: updated });
   } catch (err: any) {
     const message = err.message === "Workspace not found"
@@ -45,7 +43,7 @@ export const updateWorkspace = async (
 
 export const deleteWorkspace = async (req: Request, res: Response): Promise<void> => {
   try {
-    await deleteWorkspaceService(req.params.id);
+    await workspaceServices.deleteWorkspace(req.params.id);
     res.json({ status: "success", message: "Workspace deleted" });
   } catch (err: any) {
     const status = err.statusCode || 500;

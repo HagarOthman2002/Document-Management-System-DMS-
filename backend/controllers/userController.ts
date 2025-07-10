@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 
-import {
-  signUpService,
-  getUserService,
-  loginService,
-} from "../services/authServices";
+import * as authServices from "../services/authServices";
+
 
 interface JwtPayload {
   userId: number;
@@ -17,7 +14,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password, nid } = req.body;
 
-    const result = await signUpService({ name, email, password, nid });
+    const result = await authServices.signUp({ name, email, password, nid });
 
     res.status(201).json({ status: "success", message: result.message });
   } catch (err: any) {
@@ -30,7 +27,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
-    const { token } = await loginService(email, password);
+    const { token } = await authServices.login(email, password);
     res.json({ status: "success", token });
   } catch (err: any) {
     const message = err.message || "Server error";
@@ -38,6 +35,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     res.status(statusCode).json({ status: "error", message });
   }
 };
+
+
 
 export const getUser = async (
   req: AuthenticatedRequest,
@@ -51,7 +50,7 @@ export const getUser = async (
   }
 
   try {
-    const foundUser = await getUserService(userId);
+    const foundUser = await authServices.getUser(userId);
 
     if (!foundUser) {
       res.sendStatus(401);
@@ -68,3 +67,4 @@ export const getUser = async (
     res.status(statusCode).json({ status: "error", message });
   }
 };
+

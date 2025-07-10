@@ -5,7 +5,7 @@ interface AuthenticatedRequest extends Request {
   user?: string | JwtPayload; // You can define a specific payload shape instead of `any`
 }
 
-export function authenticateToken(
+export function authenticateMiddleWare(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction

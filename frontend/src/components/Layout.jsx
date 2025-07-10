@@ -1,8 +1,8 @@
 import Sidebar from "./sideBar";
-import Navbar from "./navbar/Navbar"; // ✅ Import Navbar
+import Navbar from "./navbar/Navbar"; 
 import { Outlet } from "react-router-dom";
 
-// Optional: pass these props from router if needed
+
 const Layout = ({
   userInfo,
   searchQuery,

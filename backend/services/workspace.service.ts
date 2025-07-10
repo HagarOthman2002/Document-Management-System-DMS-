@@ -4,7 +4,7 @@ import Workspace from "../models/workSpcae.model";
 const prisma = new PrismaClient();
 
 
-export const createWorkspaceService = async (data: {
+export const createWorkspace = async (data: {
   name: string;
   nid: string;
   description?: string;
@@ -28,7 +28,7 @@ export const createWorkspaceService = async (data: {
   return workspace;
 };
 
-export const getWorkspacesByNIDService = async (nid: string) => {
+export const getWorkspacesByNID = async (nid: string) => {
   if (!nid || !validateNationalId(nid)) {
     const error = new Error("Invalid NID");
     (error as any).statusCode = 400;
@@ -40,7 +40,7 @@ export const getWorkspacesByNIDService = async (nid: string) => {
   return workspaces;
 };
 
-export const updateWorkspaceService = async (id: string, data: any) => {
+export const updateWorkspace = async (id: string, data: any) => {
   if (!id) {
     const error = new Error("Invalid workspace ID");
     (error as any).statusCode = 400;
@@ -54,7 +54,7 @@ export const updateWorkspaceService = async (id: string, data: any) => {
   return updated;
 };
 
-export const deleteWorkspaceService = async (id: string) => {
+export const deleteWorkspace = async (id: string) => {
   if (!id) {
     const error = new Error("Invalid workspace ID");
     (error as any).statusCode = 400;

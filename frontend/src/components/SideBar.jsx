@@ -10,14 +10,15 @@ import {useState} from "react"
 import { NavLink } from "react-router-dom";
 
 const menuItems = [
-  { icon: <IoMdHome />, label: "Home" },
-  { icon: <FaGoogleDrive />, label: "My Drive" },
-  { icon: <MdDevices />, label: "Computers" },
-  { icon: <MdOutlineFolderShared />, label: "Shared with me" },
-  { icon: <CiClock2 />, label: "Recent" },
-  { icon: <RiSpam2Line />, label: "Spam" },
-  { icon: <FaRegTrashCan />, label: "Trash" },
+  { icon: <IoMdHome />, label: "Home", path: "/home" },
+  { icon: <FaGoogleDrive />, label: "My Drive", path: "/drive" },
+  { icon: <MdDevices />, label: "Computers", path: "/computers" },
+  { icon: <MdOutlineFolderShared />, label: "Shared with me", path: "/shared" },
+  { icon: <CiClock2 />, label: "Recent", path: "/recent" },
+  { icon: <RiSpam2Line />, label: "Spam", path: "/spam" },
+  { icon: <FaRegTrashCan />, label: "Trash", path: "/trash" },
 ];
+
 
 const Sidebar = () => {
   const [activeLabel , setActiveLabel] = useState("My Drive")
@@ -40,6 +41,7 @@ const Sidebar = () => {
       <nav className="space-y-8">
         {menuItems.map((item, index) => (
           <NavLink
+          to={item.path}
           onClick={() => setActiveLabel(item.label)}
             key={index}
             href="#"
