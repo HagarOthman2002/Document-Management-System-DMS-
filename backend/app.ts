@@ -5,6 +5,8 @@ dotenv.config();
 import express from "express";
 import userRouter from "./routes/userRoutes";
 import workspaceRoutes from "./routes/workSpaceRoutes";
+import documentRoutes from "./routes/documentRoutes";
+import path from "path";
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use(express.json());
 
 app.use("/api/v1", userRouter);
 app.use("/api/v1/workspaces", workspaceRoutes);
+app.use("/api/v1/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/api/v1/documents", documentRoutes);
 
 export default app;
 

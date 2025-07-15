@@ -1,16 +1,156 @@
-import React from 'react'
-import bin from "../assets/Bin.png"
+import AddEditeNotes from "./home/AddWorkspace";
+import { MdAdd } from "react-icons/md";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Modal from "react-modal";
+import moment from "moment";
+import axiosInstance from "../utils/axiosInstance";
+import ToastMessage from "../components/ToastMessage/ToastMessage";
+import EmptyCard from "../components/cards/EmptyCard";
+// import EmptyCard from "../../components/Cards/EmptyCard";
+import TrashImg from "../assets/trash.svg";
+import FloatingAddButton from "../components/button/FloatingAddButton";
 
-const Trash = () => {
+function Trash({ getAllWorkSpaces }) {
+  const [openAddEditModal, setOpenAddEditModal] = useState({
+    isShown: false,
+    type: "add",
+    data: null,
+  });
+
+  const [showToastMsg, setShowToastMsg] = useState({
+    isShown: false,
+    message: "",
+    type: "add",
+  });
+
+  const [allNotes, setAllNotes] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate();
+
+  const handleEdite = (noteDetails) => {
+    setOpenAddEditModal({ isShown: true, data: noteDetails, type: "edit" });
+  };
+
+  const showToastMessage = (message, type) => {
+    setShowToastMsg({
+      isShown: true,
+      message,
+      type,
+    });
+  };
+  const handleCloseToast = () => {
+    setShowToastMsg({
+      isShown: false,
+      message: "",
+    });
+  };
+
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get("/get-user");
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
+      }
+    } catch (error) {
+      if (error.response.status === 401) {
+        localStorage.clear();
+        navigate("/login");
+      }
+    }
+  };
+
+  const getAllNotes = async () => {
+    try {
+      const response = await axiosInstance.get("/get-all-notes");
+      if (response.data && response.data.notes) {
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.log("an unexpected error occured. please try again.");
+    }
+  };
+
+  const deleteNote = async (data) => {
+    const noteId = data?._id;
+    try {
+      const response = await axiosInstance.delete("/delete-note/" + noteId);
+      if (response.data && !response.data.error) {
+        showToastMessage("Note Deleted successfully", "delete");
+        getAllNotes();
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.message) {
+        console.log("An unexpected error occurred. please try again");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getAllNotes();
+    getUserInfo();
+    return () => {};
+  }, []);
+
   return (
-    <div className='flex flex-col items-center justify-center min-h-screen '>
-       <img src={bin} alt="bin image" className='w-50 h-50 mb-3'/>
-       <h2><b>No files or folders on the trash</b></h2>
-       <p className=''>Move files you don't need any more to the <b>Trash</b>. Click empty trash from the trash menu to permenantly delete items and free up storage space</p>
-       <p></p>
-      
-    </div>
-  )
+    <>
+      <div className="container mx-auto px-4">
+        {allNotes.length > 0 ? (
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            {allNotes.map((item) => (
+              <NoteCard
+                key={item._id}
+                title={item.title}
+                date={moment(item.createdOn).format("Do MMM YYYY")}
+                content={item.content}
+                tags={item.tags}
+                isPinned={item.isPinned}
+                onEdit={() => handleEdite(item)}
+                onDelete={() => deleteNote(item)}
+                onPinNote={() => {}}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyCard
+            optionalGreet="Trash"
+            className="flex flex-col justify-center items-center min-h-[calc(100vh-200px)]"
+            imgSrc={TrashImg}
+            title="Trash is empty"
+            message="items moved to the trash will be deleted forever after 30 days"
+          />
+        )}
+      </div>
+
+      <Modal
+        isOpen={openAddEditModal.isShown}
+        onRequestClose={() => {}}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0,0,0,0.2)",
+          },
+        }}
+        contentLabel=""
+        className="w-[40%] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
+      >
+        <AddEditeNotes
+          type={openAddEditModal.type}
+          noteData={openAddEditModal.data}
+          getAllWorkSpaces={getAllWorkSpaces}
+          showToastMessage={showToastMessage}
+          onClose={() => {
+            setOpenAddEditModal({ isShown: false, type: "add", data: null });
+          }}
+        />
+      </Modal>
+      <ToastMessage
+        isShown={showToastMsg.isShown}
+        message={showToastMsg.message}
+        type={showToastMsg.type}
+        onClose={handleCloseToast}
+      />
+    </>
+  );
 }
 
-export default Trash
+export default Trash;

@@ -1,17 +1,18 @@
 import express from "express";
+import { authenticateMiddleWare } from "../utilities";
 const router = express.Router();
 import {
   createWorkspace,
-  getWorkspacesByNID,
+  getWorkspaces,
   updateWorkspace,
   deleteWorkspace,
 } from "../controllers/workSpaceController";
 
 
 
-router.post("/", createWorkspace);                  
-router.get("/:nid", getWorkspacesByNID);       
-router.put("/:id", updateWorkspace);               
-router.delete("/:id", deleteWorkspace);             
+router.post("/",authenticateMiddleWare ,createWorkspace);                  
+router.get("/",authenticateMiddleWare ,getWorkspaces);       
+router.put("/:id",authenticateMiddleWare ,updateWorkspace);               
+router.delete("/:id", authenticateMiddleWare,deleteWorkspace);             
 
 export default router;

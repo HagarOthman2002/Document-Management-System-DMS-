@@ -1,11 +1,7 @@
-import { Children } from "react"
+import { Children } from "react";
 
-const Label = (props , ...Children) => {
-  return (
-    <label {...props} >{Children}</label>
-  )
-}
+const Label = (props, ...Children) => {
+  return <label {...props}>{Children}</label>;
+};
 
-export default Label
-
-
+export default Label;

@@ -6,6 +6,8 @@ const workSpaceSchema = new Schema({
     type: String,
     require: true,
   },
+  
+
   nid: { type: String, require: true },
   description: { type: String },
   createdAt: { type: Date, default: Date.now },

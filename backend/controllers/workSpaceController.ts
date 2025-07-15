@@ -1,6 +1,13 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "../generated/prisma/client";
 import * as workspaceServices from "../services/workspace.service";
+
+import { JwtPayload } from "jsonwebtoken";
+
+interface AuthenticatedRequest extends Request {
+  user?: JwtPayload | string;
+}
+
 const prisma = new PrismaClient();
 
 export const createWorkspace = async (req: Request, res: Response): Promise<void> => {
@@ -15,16 +22,29 @@ export const createWorkspace = async (req: Request, res: Response): Promise<void
 };
 
 
-export const getWorkspacesByNID = async (req: Request, res: Response): Promise<void> => {
+export const getWorkspaces = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
   try {
-    const workspaces = await workspaceServices.getWorkspacesByNID(req.params.nid);
-    res.json({ status: "success", workspaces });
+    const user = req.user as JwtPayload;
+    const nid = user?.nid;
+
+    if (!nid) {
+      res.status(401).json({ status: "error", message: "Unauthorized: NID not found" });
+      return;
+    }
+
+    const workspaces = await workspaceServices.getWorkspaces(nid);
+    res.status(200).json({ status: "success", workspaces });
   } catch (err: any) {
     const message = err.message || "Internal server error";
     const status = err.statusCode || 500;
     res.status(status).json({ status: "error", message });
   }
 };
+
+
 
 export const updateWorkspace = async (
   req: Request,
@@ -51,3 +71,6 @@ export const deleteWorkspace = async (req: Request, res: Response): Promise<void
     res.status(status).json({ status: "error", message });
   }
 };
+
+
+

@@ -6,8 +6,8 @@ const SearchBar = ({ value, onChange, handleSearch, onClearSearch }) => {
     <div className="w-150 flex items-center px-6 bg-slate-300 rounded-4xl ">
       <input
         type="text"
-        placeholder="Search Products"
-        className="w-full text-xs bg-transparent py-[11px] outline-none"
+        placeholder="Search in Drive"
+        className="w-full text-md font-semi-bold bg-transparent py-[20px] outline-none"
         value={value}
         onChange={onChange}
       />
@@ -22,7 +22,6 @@ const SearchBar = ({ value, onChange, handleSearch, onClearSearch }) => {
         onClick={handleSearch}
       />
     </div>
-    
   );
 };
 

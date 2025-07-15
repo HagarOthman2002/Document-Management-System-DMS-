@@ -19,7 +19,7 @@ const Navbar = ({
   };
 
   return (
-    <div className=" bg-slate-100 flex items-center justify-between px-6 py-2 sm:gap-2 drop-shadow">
+    <div className=" bg-slate-100 flex items-center justify-between px-6 py-2 sm:gap-2  ">
       <SearchBar
         value={searchQuery}
         onChange={({ target }) => setSearchQuery(target.value)}

@@ -5,7 +5,7 @@ import { validateEmail } from "../utils/helper"; // must match backend logic
 import Input from "../components/input/Input";
 import PasswordInput from "../components/input/PasswordInput";
 import Button from "../components/button/Button";
-import Logo from "../assets/Logo.png";
+import Logo from "../assets/driveLogo.png";
 import signUpImg from "../assets/LoginSignUp.png";
 
 const SignUp = () => {
@@ -84,7 +84,11 @@ const SignUp = () => {
   return (
     <div className="flex flex-col lg:flex-row w-screen h-screen overflow-hidden">
       <div className="w-full lg:w-1/2 h-64 lg:h-full">
-        <img src={signUpImg} alt="Sign Up" className="h-full w-full object-cover" />
+        <img
+          src={signUpImg}
+          alt="Sign Up"
+          className="h-full w-full object-cover"
+        />
       </div>
 
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-6 md:px-12 lg:px-24 py-10">
@@ -131,7 +135,6 @@ const SignUp = () => {
               Password
             </label>
             <PasswordInput
-              type="password"
               name="password"
               placeholder="********"
               value={formData.password}

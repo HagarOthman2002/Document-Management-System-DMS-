@@ -1,8 +1,7 @@
 import { PrismaClient } from "../generated/prisma/client";
-import {validateNationalId} from "../utilities"
+import { validateNationalId } from "../utilities";
 import Workspace from "../models/workSpcae.model";
 const prisma = new PrismaClient();
-
 
 export const createWorkspace = async (data: {
   name: string;
@@ -17,24 +16,11 @@ export const createWorkspace = async (data: {
     throw error;
   }
 
-  const user = await prisma.user.findUnique({ where: { nid } });
-  if (!user) {
-    const error = new Error("User not found with this NID");
-    (error as any).statusCode = 404;
-    throw error;
-  }
-
   const workspace = await Workspace.create({ name, nid, description });
   return workspace;
 };
 
-export const getWorkspacesByNID = async (nid: string) => {
-  if (!nid || !validateNationalId(nid)) {
-    const error = new Error("Invalid NID");
-    (error as any).statusCode = 400;
-    throw error;
-  }
-
+export const getWorkspaces = async (nid: string) => {
   const workspaces = await Workspace.find({ nid });
 
   return workspaces;
@@ -70,4 +56,3 @@ export const deleteWorkspace = async (id: string) => {
 
   return deleted;
 };
-

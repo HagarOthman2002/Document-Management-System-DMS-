@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 interface AuthenticatedRequest extends Request {
-  user?: string | JwtPayload; // You can define a specific payload shape instead of `any`
+  user?: string | JwtPayload;
 }
 
 export function authenticateMiddleWare(
@@ -33,8 +33,8 @@ export function validateEmail(email: string): boolean {
   return re.test(email);
 }
 
-export function validateNationalId(nid : string) : boolean{
-  const egyptNidRegex = /(2|3)[0-9][1-9][0-1][1-9][0-3][1-9](01|02|03|04|11|12|13|14|15|16|17|18|19|21|22|23|24|25|26|27|28|29|31|32|33|34|35|88)\d\d\d\d\d/       
-  return egyptNidRegex.test(nid)
-
+export function validateNationalId(nid: string): boolean {
+  const egyptNidRegex =
+    /(2|3)[0-9][1-9][0-1][1-9][0-3][1-9](01|02|03|04|11|12|13|14|15|16|17|18|19|21|22|23|24|25|26|27|28|29|31|32|33|34|35|88)\d\d\d\d\d/;
+  return egyptNidRegex.test(nid);
 }
