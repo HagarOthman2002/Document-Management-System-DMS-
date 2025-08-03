@@ -3,7 +3,7 @@ import { BASE_URL } from "./constans";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 1000,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) =>{
         const acessToken = localStorage.getItem("token")
+        console.log("Axios Token:", acessToken);
         if(acessToken){
             config.headers.Authorization = `Bearer ${acessToken}`
         }

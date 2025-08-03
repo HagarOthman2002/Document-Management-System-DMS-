@@ -30,9 +30,12 @@ mongoose
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
+
 app.use("/api/v1", userRouter);
 app.use("/api/v1/workspaces", workspaceRoutes);
 app.use("/api/v1/uploads", express.static(path.join(__dirname, "../uploads")));
+
+
 app.use("/api/v1/documents", documentRoutes);
 
 export default app;

@@ -16,7 +16,7 @@ const UploadDocument = () => {
 
     const formData = new FormData();
     formData.append("document", file);
-    formData.append("workSpaceId", workspaceId); // Match the field in your schema
+    formData.append("workSpaceId", workspaceId); 
     formData.append("owner", owner);
 
     try {

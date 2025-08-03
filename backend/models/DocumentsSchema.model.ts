@@ -10,7 +10,10 @@ const documentSchema = new Schema({
   },
   owner: { type: String },
   type: { type: String },
+  tags: { type: [String], default: [] },
   createdAt: { type: Date, default: Date.now },
+  deleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null },  
   fileUrl: String,
 });
 

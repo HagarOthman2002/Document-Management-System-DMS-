@@ -1,40 +1,33 @@
 import Sidebar from "./SideBar";
 import Navbar from "./navbar/Navbar";
 import { Outlet } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axiosInstance from "../utils/axiosInstance";
+import { useEffect } from "react";
+import { useSearch } from "../contexts/SearchContext";
+import { useDocuments } from "../contexts/DocumentsContext";
 
-const Layout = ({
-  userInfo,
-  searchQuery,
-  setSearchQuery,
-  handleSearch,
-  onClearSearch,
-}) => {
-  const [documents, setDocuments] = useState([]);
+const Layout = ({ userInfo }) => {
+  const { searchQuery, sort, order, type, setSearchQuery } = useSearch();
+  const { getAllDocuments } = useDocuments();
 
-  const getAllDocuments = async () => {
+  useEffect(() => {
     const workspaceId = localStorage.getItem("currentWorkspaceId");
     if (!workspaceId) return;
 
-    try {
-      const response = await axiosInstance.get(
-        `documents/${workspaceId}`
-      );
-      setDocuments(response.data.documents || []);
-      console.log("Documents refreshed:", response.data.documents);
-    } catch (error) {
-      console.error("Error fetching documents:", error);
-    }
+    getAllDocuments(workspaceId, searchQuery, sort, order, type);
+  }, [searchQuery, sort, order, type, getAllDocuments]);
+
+  const handleSearch = () => {
+    const workspaceId = localStorage.getItem("currentWorkspaceId");
+    if (workspaceId) getAllDocuments(workspaceId, searchQuery, sort, order, type);
   };
 
-  useEffect(() => {
-    getAllDocuments();
-  }, []);
+  const onClearSearch = () => {
+    setSearchQuery("");
+  };
 
   return (
-    <div className="flex min-h-screen ">
-      <Sidebar userInfo={userInfo} getAllDocuments={getAllDocuments} />
+    <div className="flex min-h-screen">
+      <Sidebar userInfo={userInfo} />
       <div className="flex-1 flex flex-col bg-gray-50">
         <Navbar
           userInfo={userInfo}
@@ -44,7 +37,7 @@ const Layout = ({
           onClearSearch={onClearSearch}
         />
         <div className="flex-1 p-4 rounded-4xl">
-          <Outlet context={{ documents }} />
+          <Outlet />
         </div>
       </div>
     </div>

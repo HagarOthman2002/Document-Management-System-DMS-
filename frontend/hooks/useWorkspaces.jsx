@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../src/utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import { useSearch } from "../src/contexts/SearchContext";
 
 export function useWorkspaces() {
   const [userInfo, setUserInfo] = useState(null);
@@ -13,6 +14,9 @@ export function useWorkspaces() {
   });
 
   const navigate = useNavigate();
+
+
+  const { searchQuery, sort, order, type } = useSearch();
 
   const showToastMessage = (message, type) => {
     setShowToastMsg({ isShown: true, message, type });
@@ -36,7 +40,7 @@ export function useWorkspaces() {
     }
   };
 
-const getAllWorkSpaces = async () => {
+  const getAllWorkSpaces = async () => {
     try {
       const response = await axiosInstance.get(`/workspaces`);
       if (response.data?.workspaces) {
@@ -47,18 +51,22 @@ const getAllWorkSpaces = async () => {
     }
   };
 
- const getAllDocuments = async (workspaceId) => {
-  if (!workspaceId) return;
-  console.log("Calling API for documents for workspace:", workspaceId);
-  try {
-    const response = await axiosInstance.get(`/documents/${workspaceId}`);
-    return response.data?.documents;
-  } catch (error) {
-    console.error("Error fetching documents:", error);
-  }
-};
+ 
+  const getAllDocuments = async (workspaceId) => {
+    if (!workspaceId) return;
+    try {
+    
+      let query = `?sort=${sort}&order=${order}`;
+      if (searchQuery) query += `&search=${encodeURIComponent(searchQuery)}`;
+      if (type) query += `&type=${encodeURIComponent(type)}`;
 
-
+      const response = await axiosInstance.get(`/documents/${workspaceId}${query}`);
+      setDocuments(response.data?.documents || []);
+      return response.data?.documents;
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    }
+  };
 
   const deleteWorkspace = async (workspace) => {
     const confirmed = window.confirm(
@@ -89,14 +97,24 @@ const getAllWorkSpaces = async () => {
   useEffect(() => {
     if (userInfo?.nid) {
       getAllWorkSpaces();
-      getAllDocuments(); // 🆕 fetch files after user is loaded
+      const workspaceId = localStorage.getItem("currentWorkspaceId");
+      if (workspaceId) {
+        getAllDocuments(workspaceId); 
+      }
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    const workspaceId = localStorage.getItem("currentWorkspaceId");
+    if (workspaceId) {
+      getAllDocuments(workspaceId);
+    }
+  }, [searchQuery, sort, order, type]);
 
   return {
     userInfo,
     allWorkSpaces,
-    documents, 
+    documents,
     showToastMsg,
     showToastMessage,
     handleCloseToast,

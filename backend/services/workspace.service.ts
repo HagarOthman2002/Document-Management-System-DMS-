@@ -1,7 +1,5 @@
-import { PrismaClient } from "../generated/prisma/client";
 import { validateNationalId } from "../utilities";
-import Workspace from "../models/workSpcae.model";
-const prisma = new PrismaClient();
+import Workspace from "../models/workSpace.model";
 
 export const createWorkspace = async (data: {
   name: string;

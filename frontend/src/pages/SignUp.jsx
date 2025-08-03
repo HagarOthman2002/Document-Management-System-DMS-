@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import { validateEmail } from "../utils/helper"; // must match backend logic
+import { validateEmail } from "../utils/helper"; 
 import Input from "../components/input/Input";
 import PasswordInput from "../components/input/PasswordInput";
 import Button from "../components/button/Button";
@@ -31,7 +31,7 @@ const SignUp = () => {
 
     const { name, email, password, nId } = formData;
 
-    // 🔐 Frontend validations to match backend
+   
     if (!name || !email || !password || !nId) {
       setError("All fields are required.");
       return;
@@ -71,7 +71,7 @@ const SignUp = () => {
         localStorage.setItem("token", response.data.accessToken);
         navigate("/dashboard");
       } else {
-        navigate("/login"); // or wherever you redirect after signup
+        navigate("/login");
       }
     } catch (error) {
       setError(

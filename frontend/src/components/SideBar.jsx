@@ -4,103 +4,94 @@ import { FaGoogleDrive } from "react-icons/fa";
 import { CiClock2 } from "react-icons/ci";
 import { RiSpam2Line } from "react-icons/ri";
 import { FaRegTrashCan } from "react-icons/fa6";
-import { useState, useRef, useEffect } from "react";
-import { NavLink } from "react-router-dom";
 import {
   MdUploadFile,
   MdDriveFolderUpload,
   MdOutlineCreateNewFolder,
-  MdDevices,
   MdOutlineFolderShared,
 } from "react-icons/md";
+import { useState, useRef, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useDocuments } from "../contexts/DocumentsContext";
 import axiosInstance from "../utils/axiosInstance";
+import Modal from "react-modal";
+import AddEditeWorkSpaces from "../pages/home/AddWorkspace";
 
 const menuItems = [
   { icon: <IoMdHome />, label: "Home", path: "/home" },
   { icon: <FaGoogleDrive />, label: "My Drive", path: "/drive" },
-
   { icon: <MdOutlineFolderShared />, label: "Shared with me", path: "/shared" },
   { icon: <CiClock2 />, label: "Recent", path: "/recent" },
   { icon: <RiSpam2Line />, label: "Spam", path: "/spam" },
   { icon: <FaRegTrashCan />, label: "Trash", path: "/trash" },
 ];
 
-const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
-  console.log("Sidebar userInfo:", userInfo);
+const Sidebar = ({ userInfo, getAllWorkSpaces }) => {
+  const { getAllDocuments } = useDocuments();
+
   const [activeLabel, setActiveLabel] = useState("Home");
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const [openAddEditModal, setOpenAddEditModal] = useState({
+    isShown: false,
+    type: "add",
+    data: null,
+  });
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleFileUpload = async (e) => {
-  if (!userInfo?.id) {
-    alert("User not logged in");
-    return;
-  }
-
-  const files = e.target.files;
-  console.log("Files received for upload:", files);
-  if (!files || files.length === 0) return;
-
-  const formData = new FormData();
-  const workspaceId = localStorage.getItem("currentWorkspaceId");
-  if (!workspaceId) {
-    alert("No workspace selected");
-    return;
-  }
-
-  for (let i = 0; i < files.length; i++) {
-    console.log("Appending file:", files[i]);
-    formData.append("document", files[i]); 
-  }
-
-  formData.append("owner", userInfo.id);
-  formData.append("workSpaceId", workspaceId);
-
-
-  for (let [key, val] of formData.entries()) {
-    console.log("FormData:", key, val);
-  }
-
-  try {
-   await axiosInstance.post("/documents/upload", formData, {
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
-
-    alert("File(s) uploaded!");
-    if (getAllDocuments) getAllDocuments();
-  } catch (err) {
-    console.error("Upload failed", err);
-  }
-};
-
-
-
-  const handleFolderUpload = async (e) => {
-    console.log("Files from folder upload:", e.target.files);
-
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-
-    if (!userInfo || !userInfo.id || !userInfo.nid) {
+    if (!userInfo?.id) {
       alert("User not logged in");
       return;
     }
+
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const workspaceId = localStorage.getItem("currentWorkspaceId");
+    if (!workspaceId) {
+      alert("No workspace selected");
+      return;
+    }
+
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("document", file);
+    }
+    formData.append("owner", userInfo.id);
+    formData.append("workSpaceId", workspaceId);
+
+    try {
+      await axiosInstance.post("/documents/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      await getAllDocuments(workspaceId);
+      alert("File(s) uploaded!");
+    } catch (error) {
+      console.error("Upload failed", error);
+      alert("Upload failed, please try again.");
+    }
+  };
+
+  const handleFolderUpload = async (e) => {
+    if (!userInfo?.id || !userInfo.nid) {
+      alert("User not logged in");
+      return;
+    }
+
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
 
     const foldersMap = {};
     files.forEach((file) => {
@@ -124,33 +115,26 @@ const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
         }
 
         const formData = new FormData();
-        folderFiles.forEach((file) => {
-          formData.append("document", file);
-        });
-
+        folderFiles.forEach((file) => formData.append("document", file));
         formData.append("owner", userInfo.id);
         formData.append("workSpaceId", newWorkspaceId);
 
-        await axiosInstance.post("/documents/upload", formData, {
-         
-        });
-
-        console.log(`Folder "${folderName}" uploaded successfully.`);
+        await axiosInstance.post("/documents/upload", formData);
       } catch (error) {
-        console.error(` Error uploading folder "${folderName}":`, error);
+        console.error(`Error uploading folder "${folderName}":`, error);
       }
     }
 
     alert("All folders uploaded!");
-    if (getAllWorkSpaces) getAllWorkSpaces();
-    if (getAllDocuments) getAllDocuments();
+
+    const currentWorkspaceId = localStorage.getItem("currentWorkspaceId");
+    if (currentWorkspaceId) await getAllDocuments(currentWorkspaceId);
   };
-  const fileInputRef = useRef(null);
 
   return (
     <div className="w-100 min-h-screen px-4 py-6 bg-slate-100 hidden md:block relative">
       <a className="flex items-center mb-10 cursor-pointer">
-        <img src={logo} alt="Logo" className="h-30  mr-2" />
+        <img src={logo} alt="Logo" className="h-30 mr-2" />
         <span className="text-3xl font-extrabold text-gray-700">Drive</span>
       </a>
 
@@ -163,7 +147,7 @@ const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
         </button>
 
         {showDropdown && (
-          <div className="absolute left-30 top-16  z-10 bg-white rounded-md shadow-md w-48">
+          <div className="absolute left-30 top-16 z-10 bg-white rounded-md shadow-md w-48">
             <button
               disabled={!userInfo}
               onClick={() => fileInputRef.current?.click()}
@@ -172,6 +156,7 @@ const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
               <MdUploadFile />
               Upload File
             </button>
+
             <button
               disabled={!userInfo}
               onClick={() => document.getElementById("folderInput").click()}
@@ -182,7 +167,9 @@ const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
             </button>
 
             <button
-              // onClick={() => alert("Create folder logic here")}
+              onClick={() =>
+                setOpenAddEditModal({ isShown: true, type: "add", data: null })
+              }
               className="w-full text-left px-4 py-2 hover:bg-slate-100 flex items-center gap-2"
             >
               <MdOutlineCreateNewFolder />
@@ -195,7 +182,6 @@ const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
           type="file"
           multiple
           name="document"
-         
           style={{ display: "none" }}
           onChange={handleFileUpload}
           ref={fileInputRef}
@@ -226,6 +212,28 @@ const Sidebar = ({ userInfo, getAllDocuments, getAllWorkSpaces }) => {
           </NavLink>
         ))}
       </nav>
+
+    
+      <Modal
+        isOpen={openAddEditModal.isShown}
+        onRequestClose={() =>
+          setOpenAddEditModal({ isShown: false, type: "add", data: null })
+        }
+        style={{
+          overlay: { backgroundColor: "rgba(0,0,0,0.2)" },
+        }}
+        className="w-[40%] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"
+      >
+        <AddEditeWorkSpaces
+          type={openAddEditModal.type}
+          noteData={openAddEditModal.data}
+          getAllWorkSpaces={getAllWorkSpaces}
+          userInfo={userInfo}
+          onClose={() =>
+            setOpenAddEditModal({ isShown: false, type: "add", data: null })
+          }
+        />
+      </Modal>
     </div>
   );
 };

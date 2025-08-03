@@ -130,7 +130,7 @@ const AddEditeWorkSpaces = ({
       {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
       {type === "edit" && (
         <div className="mt-4">
-          <h3 className="text-xl font-semibold mb-2">Files in this folder:</h3>
+
           {documents.length === 0 ? (
             <p className="text-slate-500 text-sm">No documents uploaded.</p>
           ) : (

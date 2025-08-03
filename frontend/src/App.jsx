@@ -14,6 +14,8 @@ import Recent from "./pages/Recent";
 import Shared from "./pages/Shared";
 import Spam from "./pages/Spam";
 import Trash from "./pages/Trash";
+import { SearchProvider } from "./contexts/SearchContext";
+import { DocumentsProvider } from "./contexts/DocumentsContext";
 
 Modal.setAppElement("#root");
 
@@ -53,7 +55,14 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <DocumentsProvider>
+       <SearchProvider>
+      <RouterProvider router={router} />
+    </SearchProvider>
+    </DocumentsProvider>
+   
+  );
 }
 
 export default App;

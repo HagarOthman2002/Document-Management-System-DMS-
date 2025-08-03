@@ -7,14 +7,7 @@ import {
 } from "react-icons/md";
 import { FiUserPlus } from "react-icons/fi";
 import { IoTrashOutline } from "react-icons/io5";
-// import { LuLayoutGrid } from "react-icons/lu";
-// import { FaGripLines } from "react-icons/fa";
-// import { IoMdCheckmark } from "react-icons/io";
-// <div className='flex items-center justify-between text-xl border rounded-3xl px-5 py-3 gap-3'>
-//       <FaGripLines className='cursor-pointer' />
-//       {/* <IoMdCheckmark /> */}
-//       <a href=""><LuLayoutGrid /></a>
-//     </div>
+
 
 const WorkSpcaeCard = ({ folderName, workspaceData, onRename, onDelete, onOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -42,6 +35,7 @@ const WorkSpcaeCard = ({ folderName, workspaceData, onRename, onDelete, onOpen }
         <div className="flex gap-2 items-center">
           <FaFolder className="text-xl text-gray-700" />
           <p>{folderName}</p>
+          
         </div>
 
         <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -68,7 +62,9 @@ const WorkSpcaeCard = ({ folderName, workspaceData, onRename, onDelete, onOpen }
             <IoTrashOutline />
             Move to Trash
           </li>
+          <li></li>
         </ul>
+        
       )}
     </div>
   );

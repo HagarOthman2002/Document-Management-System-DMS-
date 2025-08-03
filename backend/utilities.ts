@@ -23,6 +23,7 @@ export function authenticateMiddleWare(
       res.sendStatus(403);
       return;
     }
+ 
     req.user = user;
     next();
   });
