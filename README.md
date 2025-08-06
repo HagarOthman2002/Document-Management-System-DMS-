@@ -1,115 +1,50 @@
-# 📁 Document Management System (DMS)
+# 🗃️ Document Management System (DMS)
 
-A simple and secure Document Management System (DMS) built with **React** and **Node.js** that allows users to upload, store, manage, and share files with ease.
+This project is a **full-stack Document Management System** designed to handle **user authentication**, **workspace management**, **document uploads**, **metadata handling**, **search functionality**, and **access control** using both **relational and NoSQL databases**.
 
-## 🧠 Features
+---
 
-- 🔐 **Authentication** – Secure login and registration system
-- 📤 **File Upload** – Upload and store documents efficiently
-- 🗂️ **Workspace Management** – Organize files into workspaces
-- 👥 **User Roles** – Admin/user roles with different permissions
-- 🔍 **Search & Filter** – Quickly find documents by name
-- 🧾 **Download & Preview** – Preview documents and download them
-- 🗑️ **Delete Files** – Remove unwanted files
+## 🚀 Features Implemented
 
-## 🛠️ Tech Stack
+### ✅ Authentication & Authorization (MySQL/PostgreSQL)
+- User registration with email, password, national ID (NID), and personal info.
+- Passwords hashed with `bcrypt`.
+- Login with JWT-based authentication.
+- Middleware to protect private routes.
 
-### Frontend:
-- React.js
-- Axios
-- React Router
+### 🗂️ Workspace Management (MongoDB)
+- Users can create/update/delete workspaces (e.g., School, Internship).
+- Each workspace is linked to users via their NID.
 
-### Backend:
-- Node.js
-- Express.js
-- MongoDB (Mongoose)
+### 📄 Document Management
+- Upload documents via multi-part form data.
+- Store metadata (name, type, tags, owner, createdAt).
+- Retrieve documents by workspace.
+- Soft delete documents (marked as deleted, not removed).
+- Download documents with proper authentication.
+- Preview documents as base64-encoded content.
+- Restore and permanently delete documents.
+- Search documents by name/type.
+- Filter documents by tags, type, date range, owner.
 
-### Tools:
-- JWT (Authentication)
-- Multer (File upload middleware)
-- Bcrypt (Password hashing)
+### 🏷️ Metadata & Tagging
+- Update document name or tags.
+- Retrieve metadata for specific documents.
+- Support for tagging, filtering, and sorting.
 
+---
 
+## 🧑‍💻 Technologies Used
 
-## 📁 Folder Structure (High-Level)
+- **Backend:** Node.js, Express.js
+- **Databases:**  
+  - 🐬 MySQL/PostgreSQL (Authentication)  
+  - 🍃 MongoDB (Workspaces & Documents)
+- **Authentication:** JWT
+- **Security:** bcrypt, route protection
+- **File Uploads:** multer (with future integration for cloud storage like AWS S3)
 
-Document-Management-System-DMS/
-│
-├── backend/ # Node.js + Express backend
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ └── ...
-│
-├── frontend/ # React frontend
-│ ├── components/
-│ ├── pages/
-│ └── ...
-│
-└── README.md
+---
 
-shell
-Copy
-Edit
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js
-- MongoDB
-- npm or yarn
-
-### Setup Instructions
-
-#### 1. Clone the Repository
-
-```bash
-git clone https://github.com/HagarOthman2002/Document-Management-System-DMS-.git
-cd Document-Management-System-DMS-
-2. Install Backend Dependencies
-bash
-Copy
-Edit
-cd backend
-npm install
-Create a .env file and add:
-
-env
-Copy
-Edit
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-Run the backend:
-
-bash
-Copy
-Edit
-npm run dev
-3. Install Frontend Dependencies
-bash
-Copy
-Edit
-cd ../frontend
-npm install
-Run the frontend:
-
-bash
-Copy
-Edit
-npm start
-The app should now be running at http://localhost:3000.
-
-🧪 Future Enhancements
-Add file versioning
-
-Role-based access control (RBAC)
-
-Drag & drop file upload
-
-Tagging and advanced filtering
-
-Activity logs
-
+## 🏗️ Project Structure (Important Files)
 
