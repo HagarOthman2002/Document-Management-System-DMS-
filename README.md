@@ -1,22 +1,22 @@
-# 🗃️ Document Management System (DMS)
+#  Document Management System (DMS)
 
 This project is a **full-stack Document Management System** designed to handle **user authentication**, **workspace management**, **document uploads**, **metadata handling**, **search functionality**, and **access control** using both **relational and NoSQL databases**.
 
 ---
 
-## 🚀 Features Implemented
+##  Features Implemented
 
-### ✅ Authentication & Authorization (MySQL/PostgreSQL)
+###  Authentication & Authorization (MySQL/PostgreSQL)
 - User registration with email, password, national ID (NID), and personal info.
 - Passwords hashed with `bcrypt`.
 - Login with JWT-based authentication.
 - Middleware to protect private routes.
 
-### 🗂️ Workspace Management (MongoDB)
+###  Workspace Management (MongoDB)
 - Users can create/update/delete workspaces (e.g., School, Internship).
 - Each workspace is linked to users via their NID.
 
-### 📄 Document Management
+###  Document Management
 - Upload documents via multi-part form data.
 - Store metadata (name, type, tags, owner, createdAt).
 - Retrieve documents by workspace.
@@ -27,24 +27,24 @@ This project is a **full-stack Document Management System** designed to handle *
 - Search documents by name/type.
 - Filter documents by tags, type, date range, owner.
 
-### 🏷️ Metadata & Tagging
+###  Metadata & Tagging
 - Update document name or tags.
 - Retrieve metadata for specific documents.
 - Support for tagging, filtering, and sorting.
 
 ---
 
-## 🧑‍💻 Technologies Used
+## Technologies Used
 
 - **Backend:** Node.js, Express.js
 - **Databases:**  
-  - 🐬 MySQL/PostgreSQL (Authentication)  
-  - 🍃 MongoDB (Workspaces & Documents)
+  - PostgreSQL (Authentication)  
+  -  MongoDB (Workspaces & Documents)
 - **Authentication:** JWT
 - **Security:** bcrypt, route protection
 - **File Uploads:** multer (with future integration for cloud storage like AWS S3)
 
 ---
 
-## 🏗️ Project Structure (Important Files)
+##  Project Structure (Important Files)
 
